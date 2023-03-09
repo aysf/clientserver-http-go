@@ -1,0 +1,8 @@
+client.crt
+client.csr
+client.key
+
+server.srl
+server.crt
+server.csr
+server.key
