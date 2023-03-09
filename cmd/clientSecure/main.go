@@ -2,15 +2,18 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 )
 
 type M map[string]interface{}
 
 func main() {
-	baseURL := "http://localhost:9000"
+	baseURL := "https://localhost:9000"
 	method := "POST"
 	data := M{"Name": "Noval Agung"}
 
@@ -39,8 +42,48 @@ func doRequest(url, method string, data interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	client := new(http.Client)
+	// client := new(http.Client)
 
+	// client := new(http.Client)
+	// client.Transport = &http.Transport{
+	// 	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	// }
+
+	// certFile, err := ioutil.ReadFile("server.crt")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// caCertPool := x509.NewCertPool()
+	// caCertPool.AppendCertsFromPEM(certFile)
+	// tlsConfig := &tls.Config{RootCAs: caCertPool}
+	// tlsConfig.BuildNameToCertificate()
+	// client := new(http.Client)
+	// client.Transport = &http.Transport{
+	// 	TLSClientConfig: tlsConfig,
+	// }
+
+	certFile, err := os.ReadFile("../../localhost.crt")
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a certificate pool and add the server's certificate to it
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(certFile)
+
+	// Create a TLS configuration with the certificate pool
+	config := &tls.Config{
+		RootCAs: caCertPool,
+	}
+
+	// Create a client with the configuration
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: config,
+		},
+	}
+
+	//
 	response, err := client.Do(request)
 	if response != nil {
 		defer response.Body.Close()

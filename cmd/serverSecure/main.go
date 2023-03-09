@@ -19,7 +19,7 @@ func main() {
 
 	log.Println("Starting server at", server.Addr)
 	// err := server.ListenAndServe()
-	err := server.ListenAndServeTLS("../../server.crt", "../../server.key")
+	err := server.ListenAndServeTLS("../../localhost.crt", "../../localhost.key")
 	if err != nil {
 		log.Fatalln("Failed to start web server", err)
 	}
@@ -29,7 +29,7 @@ func ActionData(w http.ResponseWriter, r *http.Request) {
 	log.Println("Incoming request with method", r.Method)
 
 	if r.Method != "POST" {
-		http.Error(w, "Method not allowed", http.StatusBadRequest)
+		fmt.Fprintln(w, "helo get:)")
 		return
 	}
 
