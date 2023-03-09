@@ -1,6 +1,7 @@
 # Create self-signed certificates with SANs
-source: https://www.youtube.com/watch?v=qoS4bLmstlk
-
+source:
+- [Create self-signed certificates with Subject Alternative Names(SANs)][https://www.youtube.com/watch?v=qoS4bLmstlk]
+- [Key Players of SSL & TLS: Client, Server, Certificate Authority (CA) - Practical TLS](https://www.youtube.com/watch?v=C7Y4UEBJ0Og)
 1. Create a 2048 bit CA private key:
 ```
 openssl genrsa -out privkey.pem 2048
