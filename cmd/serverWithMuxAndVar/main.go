@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -14,6 +15,8 @@ func main() {
 		fmt.Fprintln(w, "this is one")
 	})
 	mux.Handle("/cekquery", http.HandlerFunc(cekQuery))
+	mux.Handle("/viewquery", http.HandlerFunc(viewquery))
+	mux.Handle("/user/", http.HandlerFunc(user))
 
 	fmt.Println("Server listening on port 9080...")
 	l, err := net.Listen("tcp", ":9080")
@@ -22,6 +25,31 @@ func main() {
 	}
 
 	http.Serve(l, mux)
+
+}
+
+func user(w http.ResponseWriter, r *http.Request) {
+	s := r.URL.RequestURI()
+	log.Println("s", s)
+
+	e := strings.Split(s, "/")
+	log.Println("e:", e)
+
+	q := strings.Split(e[2], "?")
+	log.Println("q:", q)
+
+	fmt.Println("this is user id:", q[0])
+}
+
+func viewquery(w http.ResponseWriter, r *http.Request) {
+
+	b := r.URL.Query()
+
+	fmt.Println(b)
+	if b["param1"] != nil {
+		p1 := b["param1"]
+		fmt.Println(p1[0])
+	}
 
 }
 
