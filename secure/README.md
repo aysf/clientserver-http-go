@@ -40,7 +40,9 @@ openssl req -new -nodes -out server.csr -keyout server.key -config localhost.csr
 - modify the server extension file according to your situation
 - add subject alternative name, e.g.
 ```
-
+[alt_names]
+DNS.1 = sand.mobilefish.com 
+DNS.2 = proxy.mobilefish.com 
 ```
 - In the server configuration file example (sand.mobilefish.cnf.example) I have used "CN=sand.mobilefish.com". 
 This common name must be mentioned as one of the Subject Alternative Names (SANs).
