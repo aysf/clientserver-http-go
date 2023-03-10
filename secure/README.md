@@ -1,5 +1,9 @@
 # How to create certificate
 
+**Server Certificate and Private Key**
+
+The server certificate (server.crt) and server private key (server.key) are the two files you need to install on your server (Apache web server; proxy server)
+
 ## Create self-signed certificates (old way)
 source: https://dasarpemrogramangolang.novalagung.com/C-https-tls.html
 
@@ -19,6 +23,19 @@ openssl req -new -x509 -sha256 -key server.key -out server.crt -days 3650
 
 3. Fill the form in terminal. In **Common Name** put with `localhost` for local testing or any domains. 
 
+## Create self-signed certificates (new)
+source: 
+- http://www.cs.toronto.edu/~arnold/427/19s/427_19S/tool/ssl/notes.pdf
+- https://www.feistyduck.com/library/openssl-cookbook/
+
+1. generate private key for server `server.key`
+```
+openssl genpkey -out server.key -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -pkeyopt rsa_keygen_pubexp:3
+```
+2. generate self-signed certificate for server
+```
+openssl req -new -x509 -days 365 -key server.key -out server.crt
+```
 
 ## Create self-signed certificates with SANs
 source:
@@ -54,7 +71,7 @@ As of today five organizations secure 98% of the internet. Here are those five o
 
 4. Create a server Certificate Signing Request (CSR) and server private key
 ```
-openssl req -new -nodes -out server.csr -keyout server.key -config localhost.csr.cnf
+openssl req -new -nodes -out server.csr -keyout server.key -config localhost.cnf
 ```
 
 5. Create a server extension file (server_v3.ext). Example: https://www.mobilefish.com/download/openssl/sand.mobilefish_v3.ext.txt
@@ -71,10 +88,51 @@ This common name must be mentioned as one of the Subject Alternative Names (SANs
 
 6. The last step is to crete server certificate `server.crt` and serial number file `ca.srl`
 ```
-sudo openssl x509 -req -in server.csr -CA ca.pem -CAkey privkey.pem  -CAcreateserial -out server.crt -days 3650  -extfile localhost_v3.ext 
+openssl x509 -req -in server.csr -CA ca.pem -CAkey privkey.pem  -CAcreateserial -out server.crt -days 3650  -extfile localhost_v3.ext 
 ```
 Each issued certificate must contain a unique serial number assigned by the CA. It must be unique for each certificate given by a given CA. 
 OpenSSL keeps the used serial numbers on a file.
 
-# Server Certificate and Private Key
-- The server certificate (server.crt) and server private key (server.key) are the two files you need to install on your server (Apache web server; proxy server)
+## Create self-signed certificates with SANs (new)
+
+1. generate private key
+
+```
+openssl genpkey -out server.key -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -pkeyopt rsa_keygen_pubexp:3
+```
+
+2. create cofig file `*.cnf`
+
+```
+[req]
+prompt = no
+distinguished_name = dn
+req_extensions = ext
+input_password = PASSPHRASE
+[dn]
+CN = www.feistyduck.com
+emailAddress = ansufw@gmail.com
+O = Feisty Duck Ltd
+L = London
+C = GB
+[ext]
+subjectAltName = DNS:www.feistyduck.com,DNS:feistyduck.com
+```
+change the domain names above to localhost for testing in local. see `server.cnf` as example.
+
+3. generate certificate sign request `*.csr` file
+```
+openssl req -new -config server.cnf -key server.key -out server.csr   
+```
+
+4. create extension file `*.ext`
+create file ext, e.g. `server.ext` with list the desired hostnames
+```
+subjectAltName = DNS:*.feistyduck.com, DNS:feistyduck.com
+```
+change the domain name to `localhost` for testing in local.
+
+5. generate the `*.crt` certificate file
+```
+openssl x509 -req -days 365 -in server.csr -signkey server.key -extfile server.ext -out server.crt 
+```

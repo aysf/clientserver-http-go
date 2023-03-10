@@ -6,3 +6,6 @@ server.srl
 server.crt
 server.csr
 server.key
+
+*.pem
+*.srl

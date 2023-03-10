@@ -13,7 +13,7 @@ import (
 type M map[string]interface{}
 
 func main() {
-	baseURL := "https://localhost:9000"
+	baseURL := "https://localhost:9080"
 	method := "POST"
 	data := M{"Name": "Noval Agung"}
 
@@ -42,27 +42,7 @@ func doRequest(url, method string, data interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	// client := new(http.Client)
-
-	// client := new(http.Client)
-	// client.Transport = &http.Transport{
-	// 	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	// }
-
-	// certFile, err := ioutil.ReadFile("server.crt")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// caCertPool := x509.NewCertPool()
-	// caCertPool.AppendCertsFromPEM(certFile)
-	// tlsConfig := &tls.Config{RootCAs: caCertPool}
-	// tlsConfig.BuildNameToCertificate()
-	// client := new(http.Client)
-	// client.Transport = &http.Transport{
-	// 	TLSClientConfig: tlsConfig,
-	// }
-
-	certFile, err := os.ReadFile("../../localhost.crt")
+	certFile, err := os.ReadFile("./secure/server.crt")
 	if err != nil {
 		return nil, err
 	}
