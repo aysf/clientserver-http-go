@@ -28,4 +28,8 @@ server-secure:
 
 client-secure:
 	@echo "start client secure"
-	go run cmd/clientWithMuxWithPost/*.go
+	go run cmd/clientSecure/*.go
+
+client-insecure:
+	@echo "start client secure"
+	go run cmd/clientInsecure/*.go
