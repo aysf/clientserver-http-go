@@ -19,7 +19,7 @@ func main() {
 
 	log.Println("Starting server at", server.Addr)
 	// err := server.ListenAndServe()
-	err := server.ListenAndServeTLS("../../localhost.crt", "../../localhost.key")
+	err := server.ListenAndServeTLS("../../secure/server.crt", "../../secure/server.key")
 	if err != nil {
 		log.Fatalln("Failed to start web server", err)
 	}

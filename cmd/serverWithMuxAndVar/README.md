@@ -1,6 +1,7 @@
 # Server with mux and vars
 
-In this section, we'll learn how to get parameters from URLs
+In this section, we'll learn 
+- how to get parameters from URLs
 
 # Apa bedanya URL dan URI?
 

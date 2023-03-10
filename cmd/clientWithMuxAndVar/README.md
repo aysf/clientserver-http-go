@@ -1,6 +1,7 @@
 # client request
 
-learn how to get variable from url query
+- how to create request with query params
+- can POST request send query params?
 
 ## request 
 

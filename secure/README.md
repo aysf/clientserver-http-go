@@ -1,4 +1,26 @@
-# Create self-signed certificates with SANs
+# How to create certificate
+
+## Create self-signed certificates (old way)
+source: https://dasarpemrogramangolang.novalagung.com/C-https-tls.html
+
+1. Generate private key, using this command:
+```
+openssl genrsa -out server.key 2048
+```
+and this command:
+```
+openssl ecparam -genkey -name secp384r1 -out server.key
+```
+
+2. Generate self-signed certificate (that contains public key) from the private key 
+```
+openssl req -new -x509 -sha256 -key server.key -out server.crt -days 3650
+```
+
+3. Fill the form in terminal. In **Common Name** put with `localhost` for local testing or any domains. 
+
+
+## Create self-signed certificates with SANs
 source:
 - [Create self-signed certificates with Subject Alternative Names](https://www.youtube.com/watch?v=qoS4bLmstlk)
 - [Key Players of SSL & TLS: Client, Server, Certificate Authority (CA) - Practical TLS](https://www.youtube.com/watch?v=C7Y4UEBJ0Og)
