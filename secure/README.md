@@ -143,4 +143,4 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -extfile server.e
 3. Browse the `*.crt` file that you created previously and click `open`
 4. Our local certificate will be available under `Default keychains` > `login` 
 
-![insert local certificate on macOS](./macos_keychain.png)
+![insert local certificate on macOS](./macos_keychain.jpeg)
