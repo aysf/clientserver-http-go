@@ -11,7 +11,7 @@ import (
 
 func main() {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	client := &http.Client{Transport: tr}
 	// resp, err := client.Get("http://localhost:9080/")

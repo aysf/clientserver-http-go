@@ -107,7 +107,6 @@ openssl genpkey -out server.key -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -pk
 [req]
 prompt = no
 distinguished_name = dn
-req_extensions = ext
 input_password = PASSPHRASE
 [dn]
 CN = www.feistyduck.com
@@ -115,8 +114,6 @@ emailAddress = ansufw@gmail.com
 O = Feisty Duck Ltd
 L = London
 C = GB
-[ext]
-subjectAltName = DNS:www.feistyduck.com,DNS:feistyduck.com
 ```
 change the domain names above to localhost for testing in local. see `server.cnf` as example.
 
@@ -136,3 +133,14 @@ change the domain name to `localhost` for testing in local.
 ```
 openssl x509 -req -days 365 -in server.csr -signkey server.key -extfile server.ext -out server.crt 
 ```
+
+# How to add certificate in system
+
+## MacOS
+
+1. Open `Keychain Access`
+2. Click `cmd` + `shift` + `i` to open import form
+3. Browse the `*.crt` file that you created previously and click `open`
+4. Our local certificate will be available under `Default keychains` > `login` 
+
+![insert local certificate on macOS](macos_keychain.png)
