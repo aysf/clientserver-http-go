@@ -20,7 +20,7 @@ Learn how to work with Post request, header request, Json, and form. To use it, 
 
 Learn how to use cert and private key in server. Prior to start, generate server private key and certificate (see readme). To start, open two terminals in the same time to server `make server-secure` and client `make client-insecure`. But in this scenario, the request from client is still insecure. 
 
-To get secure connection, there is two ways
+To get secure connection, there are two ways:
 - Add cert into certPool in client code (see the next step 6)
 - Add cert into local system (see this article https://github.com/aysf/clientserver-http-go/tree/main/secure#how-to-add-certificate-in-system)
 
