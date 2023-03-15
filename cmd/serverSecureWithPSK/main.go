@@ -1,13 +1,13 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
 
-	tls "github.com/raff/tls-ext"
+	"github.com/raff/tls-ext"
 	psk "github.com/raff/tls-psk"
 )
 
@@ -17,48 +17,54 @@ func main() {
 	mux := new(http.ServeMux)
 	mux.HandleFunc("/data", ActionData)
 
-	// server := new(http.Server)
-	// server.Handler = mux
-	// server.Addr = ":9080"
-	// log.Println("Starting server at", server.Addr)
-
 	s := &http.Server{
 		Addr:    ":9080",
 		Handler: mux,
 	}
 
-	l, err := net.Listen("tls", ":9080")
-	if err != nil {
-		log.Fatalln("Failed to start web server", err)
-	}
-
 	cfg := &tls.Config{
-		CipherSuites: []uint16{psk.TLS_DHE_PSK_WITH_AES_128_CBC_SHA, psk.TLS_DHE_PSK_WITH_AES_256_CBC_SHA},
-		Certificates: []tls.Certificate(tls.Certificate{}),
-		MaxVersion:   tls.VersionTLS12,
+		CipherSuites: []uint16{
+			psk.TLS_PSK_WITH_AES_128_CBC_SHA,
+			psk.TLS_PSK_WITH_AES_256_CBC_SHA,
+			psk.TLS_PSK_WITH_3DES_EDE_CBC_SHA,
+		},
+		PreferServerCipherSuites: true,
+		Certificates:             []tls.Certificate{{}},
+		MaxVersion:               tls.VersionTLS12,
+		MinVersion:               tls.VersionTLS11,
 		Extra: psk.PSKConfig{
-			GetKey: getIdentityKey,
+			GetKey: func(identity string) ([]byte, error) {
+				hexString := "166ACC41EC1D4E1DD001ECC130ED0810"
+				key := make([]byte, hex.DecodedLen(len(hexString)))
+				_, err := hex.Decode(key, []byte(hexString))
+				if err != nil {
+					return nil, err
+				}
+				return key, nil
+			},
 		},
 	}
 
-	l = tls.NewListener(l, cfg)
+	l, err := tls.Listen("tcp", ":9080", cfg)
+	// l, err := net.Listen("tcp", ":9080")
+	if err != nil {
+		log.Fatalln("Failed to start web server", err)
+	}
+	// l = tls.NewListener(l, cfg)
 
-	s.Serve(l)
+	log.Println("Starting server at 9080")
 
-	// err := server.ListenAndServeTLS("./secure/server.crt", "./secure/server.key")
+	if err := s.Serve(l); err != nil {
+		log.Fatalln("error starting server:", err)
+	}
 
-}
-
-func getIdentityKey(id string) ([]byte, error) {
-
-	return nil, nil
 }
 
 func ActionData(w http.ResponseWriter, r *http.Request) {
 	log.Println("Incoming request with method", r.Method)
 
 	if r.Method != "POST" {
-		fmt.Fprintln(w, "helo get:)")
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 

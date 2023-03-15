@@ -33,3 +33,12 @@ client-secure:
 client-insecure:
 	@echo "start client secure"
 	go run cmd/clientInsecure/*.go
+
+
+server-psk:
+	@echo "start server secure with PSK"
+	go run cmd/serverSecureWithPSK/*.go
+
+client-psk:
+	@echo "start client secure"
+	go run cmd/clientSecureWithPSK/*.go
